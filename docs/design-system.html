@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Budgeet — design system</title>
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+@theme {
+  --color-*:initial;
+  --color-transparent:transparent; --color-current:currentColor;
+  --color-white:#ffffff; --color-black:#000000;
+
+  --color-paper:#f6f6f3; --color-surface:#ffffff; --color-pending:#faf8f0; --color-hover:#f0efeb;
+  --color-ink:#17171a; --color-ink-press:#33333a; --color-ink-2:#6c6c74; --color-ink-3:#9c9ca4; --color-ink-4:#c3c3bd;
+  --color-line:#e7e6e1; --color-line-strong:#d5d4cd;
+  --color-gold:#b0801f; --color-gold-ink:#8a6314; --color-gold-soft:#fbf3e2;
+  --color-green:#0f7a4c; --color-green-soft:#e7f2ec;
+  --color-red:#c0432f; --color-red-ink:#9c3626; --color-red-soft:#fbede9;
+
+  --color-sage:#e8efe7;  --color-sage-ink:#3f6b45;
+  --color-teal:#e2efef;  --color-teal-ink:#2c6a69;
+  --color-sky:#e4ebf5;   --color-sky-ink:#3a5b87;
+  --color-iris:#eae7f3;  --color-iris-ink:#5a4e8c;
+  --color-plum:#f3e7ee;  --color-plum-ink:#85436b;
+  --color-rose:#f7e8e7;  --color-rose-ink:#a0483f;
+  --color-amber:#f7eddc; --color-amber-ink:#8a6314;
+  --color-olive:#eeefdf; --color-olive-ink:#5e6a2c;
+  --color-stone:#ecece8; --color-stone-ink:#5a5a62;
+
+  --font-sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+
+  --text-2xs:0.6875rem;  --text-2xs--line-height:1rem;
+  --text-xs:0.75rem;     --text-xs--line-height:1rem;
+  --text-sm:0.8125rem;   --text-sm--line-height:1.125rem;
+  --text-base:0.875rem;  --text-base--line-height:1.25rem;
+  --text-lg:1rem;        --text-lg--line-height:1.375rem;
+  --text-xl:1.25rem;     --text-xl--line-height:1.625rem;   --text-xl--letter-spacing:-0.015em;
+  --text-2xl:1.75rem;    --text-2xl--line-height:2rem;      --text-2xl--letter-spacing:-0.022em;
+  --text-3xl:2.5rem;     --text-3xl--line-height:2.5rem;    --text-3xl--letter-spacing:-0.032em;
+
+  --radius-xs:4px; --radius-sm:6px; --radius-md:8px; --radius-lg:12px; --radius-xl:16px;
+  --shadow-pop:0 6px 20px -4px rgb(20 20 25 / .14), 0 0 0 1px rgb(0 0 0 / .06);
+  --shadow-modal:0 24px 60px -12px rgb(20 20 25 / .28), 0 0 0 1px rgb(0 0 0 / .06);
+}
+@layer base{
+  body{background-color:var(--color-paper);color:var(--color-ink);font-family:var(--font-sans);
+       font-size:var(--text-base);line-height:var(--text-base--line-height);
+       -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--color-gold);outline-offset:1px;border-radius:4px}
+  ::selection{background-color:color-mix(in oklab,var(--color-gold) 22%,transparent)}
+  dialog::backdrop{background-color:rgb(23 23 26 / .32)}
+  @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
+}
+@utility money{font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
+@utility btn{
+  display:inline-flex;flex-shrink:0;align-items:center;justify-content:center;gap:.375rem;
+  white-space:nowrap;font-weight:500;transition:background-color .1s,border-color .1s,color .1s;
+}
+</style>
+</head>
+<body>
+
+<div class="mx-auto max-w-4xl px-5 py-14 md:px-8">
+
+  <!-- ── masthead ───────────────────────────────────────────────── -->
+  <header class="mb-14">
+    <div class="mb-5 flex items-center gap-2.5">
+      <span class="size-5 rounded-[6px] bg-linear-150 from-[#e8c577] to-gold"></span>
+      <b class="text-base font-semibold tracking-[-.015em]">Budgeet</b>
+    </div>
+    <h1 class="text-xl font-semibold">Design system</h1>
+    <p class="mt-2 max-w-[62ch] text-ink-2">
+      Tailwind v4, CSS-first, no config file. Everything here is a token in
+      <code class="rounded-xs bg-hover px-1 font-mono text-xs text-ink">globals.css</code> or a component in
+      <code class="rounded-xs bg-hover px-1 font-mono text-xs text-ink">ui.tsx</code>.
+      The product is a ledger you scan quickly and correct occasionally, so the system is built for
+      dense rows of numbers first and forms second.
+    </p>
+  </header>
+
+  <!-- ── the thing itself ───────────────────────────────────────── -->
+  <section class="mb-16">
+    <h2 class="mb-1 text-lg font-semibold">The row</h2>
+    <p class="mb-5 max-w-[62ch] text-sm text-ink-2">
+      Every decision below exists to make this legible. Two rows are waiting on you — they sit on the
+      warm pending tint with an open circle. Assigning a budget marks a row reviewed in the same write.
+    </p>
+
+    <div class="overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="flex items-baseline justify-between border-b border-line px-4 py-2">
+        <span class="text-2xs font-medium text-ink-2">Friday, 4 September</span>
+        <span class="money text-2xs text-ink-3">$214.86</span>
+      </div>
+
+      <!-- reviewed -->
+      <div class="group flex h-11 items-center gap-3 border-b border-line px-4 hover:bg-hover">
+        <span class="grid size-4 shrink-0 place-items-center rounded-full bg-ink-4 text-2xs leading-none text-white">✓</span>
+        <span class="min-w-0 flex-1 truncate text-sm">Blue Bottle Coffee</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-amber pl-2 pr-2.5 text-xs font-medium text-amber-ink">☕ Coffee</span>
+        <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">coffee</span>
+        <span class="hidden w-24 shrink-0 sm:block"><button class="inline-flex h-5 items-center rounded-full border border-dashed border-ink-4 px-2 text-2xs text-ink-4 opacity-0 transition-opacity hover:border-ink-3 hover:text-ink-2 group-hover:opacity-100">+ tag</button></span>
+        <span class="money w-20 shrink-0 text-right text-sm font-medium">$6.75</span>
+      </div>
+
+      <!-- pending, low confidence -->
+      <div class="group flex h-11 items-center gap-3 border-b border-line bg-pending px-4">
+        <span class="size-4 shrink-0 rounded-full border-[1.5px] border-gold"></span>
+        <span class="min-w-0 flex-1 truncate text-sm">SQ *THE UNION</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-rose pl-2 pr-2.5 text-xs font-medium text-rose-ink">🍽 Dining</span>
+        <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">restaurant</span>
+        <span class="hidden w-24 shrink-0 sm:block"><button class="inline-flex h-5 items-center rounded-full border border-line bg-paper px-2 text-2xs text-ink-2">brunch</button></span>
+        <span class="money w-20 shrink-0 text-right text-sm font-medium">$64.20</span>
+      </div>
+
+      <!-- pending, unassigned -->
+      <div class="group flex h-11 items-center gap-3 border-b border-line bg-pending px-4">
+        <span class="size-4 shrink-0 rounded-full border-[1.5px] border-ink-4"></span>
+        <span class="min-w-0 flex-1 truncate text-sm">SAFEWAY #1842</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full border border-dashed border-ink-4 px-2.5 text-xs font-medium text-ink-4">+ budget</span>
+        <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">groceries</span>
+        <span class="hidden w-24 shrink-0 sm:block"></span>
+        <span class="money w-20 shrink-0 text-right text-sm font-medium">$143.91</span>
+      </div>
+
+      <!-- inflow -->
+      <div class="group flex h-11 items-center gap-3 px-4 hover:bg-hover">
+        <span class="grid size-4 shrink-0 place-items-center rounded-full bg-ink-4 text-2xs leading-none text-white">✓</span>
+        <span class="min-w-0 flex-1 truncate text-sm">Employer payroll</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-sage pl-2 pr-2.5 text-xs font-medium text-sage-ink">💵 Income</span>
+        <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">salary</span>
+        <span class="hidden w-24 shrink-0 sm:block"></span>
+        <span class="money w-20 shrink-0 text-right text-sm font-medium text-green">$3,120.00</span>
+      </div>
+
+      <div class="flex items-center justify-between bg-pending px-4 py-2">
+        <span class="text-2xs text-ink-3">2 waiting on you</span>
+        <button class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:bg-hover">Mark 2 reviewed</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── colour ─────────────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Colour</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      Three groups. Surfaces and ink carry the whole interface; gold, green and red are reserved for
+      state and never used decoratively. Gold in particular is a stroke, a tint or a word — put it on a
+      button fill and it stops meaning anything. Tailwind's own palette is wiped in the theme block, so
+      <code class="rounded-xs bg-hover px-1 font-mono text-xs text-ink">bg-blue-500</code> doesn't
+      compile: if a colour isn't here, it isn't in the product.
+    </p>
+
+    <div class="mb-8">
+      <h3 class="mb-3 text-xs font-medium text-ink-2">Surfaces and ink</h3>
+      <div class="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-4">
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs border border-line bg-paper"></span><b class="block text-xs font-medium">paper</b><code class="font-mono text-2xs text-ink-3">#f6f6f3</code><p class="mt-1 text-2xs text-ink-3">app ground</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs border border-line bg-surface"></span><b class="block text-xs font-medium">surface</b><code class="font-mono text-2xs text-ink-3">#ffffff</code><p class="mt-1 text-2xs text-ink-3">anything holding a value</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs border border-line bg-pending"></span><b class="block text-xs font-medium">pending</b><code class="font-mono text-2xs text-ink-3">#faf8f0</code><p class="mt-1 text-2xs text-ink-3">unreviewed row</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs border border-line bg-hover"></span><b class="block text-xs font-medium">hover</b><code class="font-mono text-2xs text-ink-3">#f0efeb</code><p class="mt-1 text-2xs text-ink-3">pointer feedback</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs bg-ink"></span><b class="block text-xs font-medium">ink</b><code class="font-mono text-2xs text-ink-3">#17171a</code><p class="mt-1 text-2xs text-ink-3">values you act on</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs bg-ink-2"></span><b class="block text-xs font-medium">ink-2</b><code class="font-mono text-2xs text-ink-3">#6c6c74</code><p class="mt-1 text-2xs text-ink-3">labels</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs bg-ink-3"></span><b class="block text-xs font-medium">ink-3</b><code class="font-mono text-2xs text-ink-3">#9c9ca4</code><p class="mt-1 text-2xs text-ink-3">metadata, placeholders</p></div>
+        <div class="bg-surface p-3"><span class="mb-2 block h-9 rounded-xs bg-ink-4"></span><b class="block text-xs font-medium">ink-4</b><code class="font-mono text-2xs text-ink-3">#c3c3bd</code><p class="mt-1 text-2xs text-ink-3">ghost affordances only</p></div>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h3 class="mb-3 text-xs font-medium text-ink-2">State</h3>
+      <div class="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-3">
+        <div class="bg-surface p-4">
+          <div class="mb-3 flex items-center gap-2"><span class="size-5 rounded-full bg-green"></span><span class="size-5 rounded-full bg-green-soft"></span></div>
+          <b class="block text-sm">green</b>
+          <p class="mt-1 text-xs text-ink-3">Money in, and spending under pace. <code class="font-mono text-2xs">#0f7a4c</code></p>
+        </div>
+        <div class="bg-surface p-4">
+          <div class="mb-3 flex items-center gap-2"><span class="size-5 rounded-full bg-gold"></span><span class="size-5 rounded-full bg-gold-soft"></span></div>
+          <b class="block text-sm">gold</b>
+          <p class="mt-1 text-xs text-ink-3">Focus, low AI confidence, past pace but inside budget. <code class="font-mono text-2xs">#b0801f</code></p>
+        </div>
+        <div class="bg-surface p-4">
+          <div class="mb-3 flex items-center gap-2"><span class="size-5 rounded-full bg-red"></span><span class="size-5 rounded-full bg-red-soft"></span></div>
+          <b class="block text-sm">red</b>
+          <p class="mt-1 text-xs text-ink-3">Past the budget, and destructive actions. <code class="font-mono text-2xs">#c0432f</code></p>
+        </div>
+      </div>
+      <p class="mt-3 max-w-[62ch] text-xs text-ink-3">
+        Gold and red are hard to tell apart under deuteranopia, so nothing may rely on that pair alone.
+        The widget settles it with the words <em>left</em> and <em>over</em>; a row settles it with the
+        pace tick. Carry a second cue every time.
+      </p>
+    </div>
+
+    <div>
+      <h3 class="mb-1 text-xs font-medium text-ink-2">Budget hues</h3>
+      <p class="mb-3 max-w-[62ch] text-xs text-ink-3">
+        <code class="font-mono">budgets.color</code> stores a name from this list, not a hex, so the
+        palette stays changeable and every pill stays legible on paper. Soft fill, own ink — a pill
+        should never out-shout the amount beside it.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-sage pl-2 pr-2.5 text-xs font-medium text-sage-ink">🌱 sage</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-teal pl-2 pr-2.5 text-xs font-medium text-teal-ink">🚿 teal</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-sky pl-2 pr-2.5 text-xs font-medium text-sky-ink">✈️ sky</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-iris pl-2 pr-2.5 text-xs font-medium text-iris-ink">🎟 iris</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-plum pl-2 pr-2.5 text-xs font-medium text-plum-ink">💊 plum</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-rose pl-2 pr-2.5 text-xs font-medium text-rose-ink">🍽 rose</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-amber pl-2 pr-2.5 text-xs font-medium text-amber-ink">☕ amber</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-olive pl-2 pr-2.5 text-xs font-medium text-olive-ink">🛒 olive</span>
+        <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-stone pl-2 pr-2.5 text-xs font-medium text-stone-ink">📦 stone</span>
+      </div>
+      <p class="mt-3 max-w-[62ch] text-xs text-ink-3">
+        Stone is the system <em>Unassigned</em> budget. Nine hues is the ceiling — past that they stop
+        being distinguishable and start being noise.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── type ───────────────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Type</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      One family, the system stack, so the app inherits whatever the OS thinks a readable interface is.
+      Roles come from size, weight and ink rather than a second face. Body is 14px, not 16 — this is a
+      table-shaped app and 16 pushes a row past comfortable scanning height.
+    </p>
+
+    <div class="divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-3xl</code><span class="money min-w-0 flex-1 truncate text-3xl font-semibold">$1,412</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">40/40 · one hero figure per screen</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-2xl</code><span class="money min-w-0 flex-1 truncate text-2xl font-semibold">$3,120.00</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">28/32 · a month total</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-xl</code><span class="min-w-0 flex-1 truncate text-xl font-semibold">Transactions</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">20/26 · page title</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-lg</code><span class="min-w-0 flex-1 truncate text-lg font-semibold">Edit transaction</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">16/22 · modal and section titles</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-base</code><span class="min-w-0 flex-1 truncate text-base">Prose, inputs and buttons</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">14/20 · the default</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-sm</code><span class="min-w-0 flex-1 truncate text-sm">Blue Bottle Coffee</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">13/18 · table body</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-xs</code><span class="min-w-0 flex-1 truncate text-xs text-ink-3">coffee</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">12/16 · category leaf, hints, labels</span></div>
+      <div class="flex items-baseline gap-4 px-4 py-3"><code class="w-20 shrink-0 font-mono text-2xs text-ink-3">text-2xs</code><span class="min-w-0 flex-1 truncate text-2xs text-ink-3">Synced 6 minutes ago</span><span class="hidden shrink-0 text-2xs text-ink-3 sm:block">11/16 · timestamps, counts</span></div>
+    </div>
+
+    <div class="mt-5 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-lg border border-line bg-surface p-4">
+        <h3 class="mb-2 text-sm font-semibold">Weights</h3>
+        <p class="text-sm">Three: <span class="font-normal">400 body</span>, <span class="font-medium">500 labels, buttons, amounts</span>, <span class="font-semibold">600 headings</span>. Nothing bolder — semibold at 40px is already loud.</p>
+      </div>
+      <div class="rounded-lg border border-line bg-surface p-4">
+        <h3 class="mb-2 text-sm font-semibold">Numbers</h3>
+        <p class="text-sm">Tabular figures are on globally, because every number in this app sits in a column under another number. Amounts add <code class="rounded-xs bg-hover px-1 font-mono text-2xs">money</code> for slightly tighter tracking.</p>
+      </div>
+      <div class="rounded-lg border border-line bg-surface p-4 sm:col-span-2">
+        <h3 class="mb-2 text-sm font-semibold">Where mono is allowed</h3>
+        <p class="mb-3 text-sm text-ink-2">Machine strings only: the raw bank description, transaction ids, account masks. Not for labels or small print — that's costume, not information.</p>
+        <div class="rounded-md bg-paper p-3">
+          <p class="mb-1 text-xs text-ink-2">From the bank</p>
+          <p class="font-mono text-xs text-ink">SQ *THE UNION       SAN FRANCISCOCA</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── space ──────────────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Space and shape</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      Tailwind's 4px scale, used at six steps and no others. Picking from a short list is what keeps a
+      solo project consistent six months in.
+    </p>
+
+    <div class="mb-6 overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="divide-y divide-line">
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-1</code><span class="h-3 shrink-0 bg-gold" style="width:4px"></span><span class="text-xs text-ink-2">4 — inside a pill, icon to its label</span></div>
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-2</code><span class="h-3 shrink-0 bg-gold" style="width:8px"></span><span class="text-xs text-ink-2">8 — between controls in a group</span></div>
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-3</code><span class="h-3 shrink-0 bg-gold" style="width:12px"></span><span class="text-xs text-ink-2">12 — between cells in a row</span></div>
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-4</code><span class="h-3 shrink-0 bg-gold" style="width:16px"></span><span class="text-xs text-ink-2">16 — between fields in a form, row padding</span></div>
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-6</code><span class="h-3 shrink-0 bg-gold" style="width:24px"></span><span class="text-xs text-ink-2">24 — between blocks, page padding on desktop</span></div>
+        <div class="flex items-center gap-4 px-4 py-2.5"><code class="w-14 shrink-0 font-mono text-2xs text-ink-3">gap-10</code><span class="h-3 shrink-0 bg-gold" style="width:40px"></span><span class="text-xs text-ink-2">40 — between sections of a page</span></div>
+      </div>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="rounded-lg border border-line bg-surface p-4">
+        <h3 class="mb-3 text-sm font-semibold">Radius follows size</h3>
+        <div class="mb-3 flex items-end gap-3">
+          <span class="grid size-8 place-items-center rounded-xs border border-line-strong bg-paper text-2xs text-ink-3">4</span>
+          <span class="grid size-10 place-items-center rounded-sm border border-line-strong bg-paper text-2xs text-ink-3">6</span>
+          <span class="grid size-12 place-items-center rounded-md border border-line-strong bg-paper text-2xs text-ink-3">8</span>
+          <span class="grid size-14 place-items-center rounded-lg border border-line-strong bg-paper text-2xs text-ink-3">12</span>
+          <span class="grid size-16 place-items-center rounded-xl border border-line-strong bg-paper text-2xs text-ink-3">16</span>
+        </div>
+        <p class="text-xs text-ink-2">Inline fields 4, menu items and small buttons 6, inputs and buttons 8, menus and cards 12, dialogs 16. Pills are always full.</p>
+      </div>
+      <div class="rounded-lg border border-line bg-surface p-4">
+        <h3 class="mb-3 text-sm font-semibold">Two shadows, or none</h3>
+        <div class="mb-3 flex items-center gap-4">
+          <span class="grid h-14 flex-1 place-items-center rounded-lg bg-surface text-2xs text-ink-3 shadow-pop">pop</span>
+          <span class="grid h-14 flex-1 place-items-center rounded-xl bg-surface text-2xs text-ink-3 shadow-modal">modal</span>
+        </div>
+        <p class="text-xs text-ink-2">Only things that actually float get a shadow. Everything resting on the page uses a hairline border instead — a card with both is a card doing too much.</p>
+      </div>
+    </div>
+
+    <div class="mt-4 rounded-lg border border-line bg-surface p-4">
+      <h3 class="mb-2 text-sm font-semibold">Control heights</h3>
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="grid h-5 place-items-center rounded-full border border-line bg-paper px-2 text-2xs text-ink-2">20 tag</span>
+        <span class="grid h-6 place-items-center rounded-full bg-stone px-2.5 text-xs text-stone-ink">24 budget pill</span>
+        <span class="grid h-7 place-items-center rounded-sm border border-line bg-surface px-2.5 text-sm">28 small button</span>
+        <span class="grid h-8 place-items-center rounded-sm px-2 text-sm text-ink-2 hover:bg-hover">32 menu item</span>
+        <span class="grid h-9 place-items-center rounded-md border border-line bg-surface px-3.5 text-base">36 button and input</span>
+        <span class="grid h-11 place-items-center rounded-md bg-paper px-3 text-sm text-ink-2">44 transaction row</span>
+      </div>
+      <p class="mt-3 max-w-[62ch] text-xs text-ink-2">Six heights, and the row is 44 because that's the touch minimum. Anything smaller than 44 is pointer-only and must have a larger tap target on phones.</p>
+    </div>
+  </section>
+
+  <!-- ── buttons ────────────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Buttons</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      Four intents, two sizes. Primary is ink, not gold — a gold button would make every screen look
+      like it's warning you about something. Labels say what happens: <em>Save changes</em>, never
+      <em>Submit</em>.
+    </p>
+
+    <div class="overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="flex flex-wrap items-center gap-3 border-b border-line p-5">
+        <button class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
+        <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:border-line-strong hover:bg-hover">Cancel</button>
+        <button class="btn h-9 rounded-md px-3.5 text-base text-ink-2 hover:bg-hover hover:text-ink">Clear override</button>
+        <button class="btn h-9 rounded-md bg-red px-3.5 text-base text-white hover:bg-red-ink">Delete budget</button>
+        <button disabled class="btn h-9 cursor-not-allowed rounded-md bg-ink px-3.5 text-base text-white opacity-40">Save changes</button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 border-b border-line p-5">
+        <button class="btn h-7 rounded-sm bg-ink px-2.5 text-sm text-white hover:bg-ink-press">Sync now</button>
+        <button class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:border-line-strong hover:bg-hover">Mark 2 reviewed</button>
+        <button class="btn h-7 rounded-sm px-2.5 text-sm text-ink-2 hover:bg-hover hover:text-ink">Show hidden</button>
+        <button class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="More">···</button>
+      </div>
+      <div class="grid gap-x-6 gap-y-2 p-5 text-xs text-ink-2 sm:grid-cols-2">
+        <p><b class="font-medium text-ink">primary</b> — the one committing action on a screen. Never two.</p>
+        <p><b class="font-medium text-ink">secondary</b> — everything reversible. The default.</p>
+        <p><b class="font-medium text-ink">ghost</b> — actions inside a row or toolbar, where a border would add a line to an already ruled surface.</p>
+        <p><b class="font-medium text-ink">danger</b> — deletes only, and only after a confirm.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── inputs ─────────────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Inputs</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      Focus is a gold border plus a soft gold halo, which stays inside the element's box — the global
+      outline would clip against a table cell. Labels sit above at 12px; there are no floating labels
+      and no placeholders standing in for labels.
+    </p>
+
+    <div class="grid gap-6 rounded-lg border border-line bg-surface p-5 sm:grid-cols-2">
+      <div class="flex flex-col gap-1.5">
+        <label for="d1" class="text-xs font-medium text-ink-2">Description</label>
+        <input id="d1" value="Blue Bottle Coffee" class="h-9 w-full rounded-md border border-line bg-surface px-3 text-base placeholder:text-ink-3 focus:border-gold focus:shadow-[0_0_0_3px_var(--color-gold-soft)] focus:outline-none">
+        <p class="text-xs text-ink-3">Overrides the bank string. The original is kept.</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="a1" class="text-xs font-medium text-ink-2">Amount</label>
+        <div class="relative">
+          <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-ink-3">$</span>
+          <input id="a1" value="6.75" inputmode="decimal" class="money h-9 w-full rounded-md border border-line bg-surface pl-6 pr-3 text-right text-base focus:border-gold focus:shadow-[0_0_0_3px_var(--color-gold-soft)] focus:outline-none">
+        </div>
+        <p class="text-xs text-ink-3">Positive is money out.</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="b1" class="text-xs font-medium text-ink-2">Budget</label>
+        <select id="b1" class="h-9 w-full rounded-md border border-line bg-surface px-3 text-base focus:border-gold focus:shadow-[0_0_0_3px_var(--color-gold-soft)] focus:outline-none">
+          <option>Coffee</option><option>Dining</option><option>Groceries</option>
+        </select>
+        <p class="text-xs text-ink-3">Native select where the list is short.</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label for="e1" class="text-xs font-medium text-ink-2">Amount</label>
+        <input id="e1" value="-6.75" aria-invalid="true" class="money h-9 w-full rounded-md border border-red bg-surface px-3 text-right text-base focus:shadow-[0_0_0_3px_var(--color-red-soft)] focus:outline-none">
+        <p class="text-xs text-red">Enter a positive number. Use the direction toggle for refunds.</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5 sm:col-span-2">
+        <label for="n1" class="text-xs font-medium text-ink-2">Why you changed this</label>
+        <textarea id="n1" rows="2" placeholder="Split with Ana, she paid me back in cash" class="min-h-20 w-full resize-y rounded-md border border-line bg-surface px-3 py-2 text-base placeholder:text-ink-3 focus:border-gold focus:shadow-[0_0_0_3px_var(--color-gold-soft)] focus:outline-none"></textarea>
+        <p class="text-xs text-ink-3">Goes into the correction log and back into the next classification prompt.</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5 sm:col-span-2">
+        <span class="text-xs font-medium text-ink-2">Editing in place</span>
+        <div class="flex h-11 items-center gap-3 rounded-md border border-line px-3">
+          <input value="Blue Bottle Coffee" class="-mx-1 min-w-0 flex-1 rounded-xs bg-surface px-1 text-sm shadow-[0_0_0_2px_var(--color-gold)] outline-none">
+          <span class="money w-20 shrink-0 text-right text-sm font-medium">$6.75</span>
+        </div>
+        <p class="text-xs text-ink-3">No chrome until focus, and no layout shift when it appears. Enter commits, Esc reverts, blur commits.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── floating surfaces ──────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Menus and dialogs</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      The two floating surfaces. A menu is a bordered card with the pop shadow; a dialog is a native
+      <code class="rounded-xs bg-hover px-1 font-mono text-xs text-ink">&lt;dialog&gt;</code>, which
+      gives focus trapping, Esc and an inert background without any library.
+    </p>
+
+    <div class="grid gap-6 sm:grid-cols-2">
+      <div>
+        <div class="w-56 rounded-lg border border-line bg-surface p-1 shadow-pop">
+          <p class="px-2 py-1.5 text-2xs text-ink-3">Assign budget</p>
+          <div class="mx-1 mb-1 flex h-8 items-center rounded-sm border border-line px-2 text-sm text-ink-3">Search…</div>
+          <button class="flex h-8 w-full items-center gap-2 rounded-sm bg-hover px-2 text-sm"><span class="size-2 rounded-full bg-amber-ink"></span>Coffee</button>
+          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-rose-ink"></span>Dining</button>
+          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-olive-ink"></span>Groceries</button>
+          <div class="my-1 h-px bg-line"></div>
+          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm text-ink-2 hover:bg-hover">Clear budget</button>
+        </div>
+        <p class="mt-3 max-w-[40ch] text-xs text-ink-2">Menu items are 32px with a 6px radius and inset by 4px, so the highlight never touches the menu's edge.</p>
+      </div>
+
+      <div>
+        <div class="overflow-hidden rounded-xl border border-line bg-surface shadow-modal">
+          <div class="flex items-center justify-between border-b border-line px-5 py-3.5">
+            <h3 class="text-lg font-semibold">Blue Bottle Coffee</h3>
+            <button class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="Close">✕</button>
+          </div>
+          <div class="space-y-4 px-5 py-4">
+            <div class="flex items-baseline justify-between"><span class="text-xs text-ink-2">Amount</span><span class="money text-2xl font-semibold">$6.75</span></div>
+            <div class="rounded-md bg-paper p-3">
+              <p class="mb-1 text-2xs text-ink-2">From the bank</p>
+              <p class="font-mono text-xs">SQ *BLUE BOTTLE  OAKLAND CA</p>
+            </div>
+          </div>
+          <div class="flex justify-end gap-2 border-t border-line bg-paper px-5 py-3">
+            <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Cancel</button>
+            <button class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
+          </div>
+        </div>
+        <p class="mt-3 max-w-[40ch] text-xs text-ink-2">Header, body, footer — the footer sits on paper so the actions read as a separate surface. On phones this becomes a bottom sheet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── empty and error ────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Nothing there, and something wrong</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      An empty screen names the next action. An error says what happened and what to do about it, in
+      the app's voice — no apologies, no exclamation marks, no illustrations.
+    </p>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div class="rounded-lg border border-line bg-surface px-5 py-8 text-center">
+        <p class="mb-1 text-base font-medium">No transactions this month yet</p>
+        <p class="mx-auto mb-4 max-w-[36ch] text-sm text-ink-2">Tiller posts a day or two behind the bank, so the start of a month is usually quiet.</p>
+        <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Sync now</button>
+      </div>
+      <div class="rounded-lg border border-red bg-red-soft px-5 py-4">
+        <p class="mb-1 text-base font-medium text-red-ink">Sync failed after 11 accounts</p>
+        <p class="mb-3 max-w-[44ch] text-sm text-ink-2">The Google Sheets quota was reached. Transactions already read are saved; the rest will come through on the next run.</p>
+        <button class="btn h-7 rounded-sm border border-red-ink/25 bg-surface px-2.5 text-sm text-red-ink hover:bg-red-soft">Try again</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── dependencies ───────────────────────────────────────────── -->
+  <section class="mb-16 border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">What to install, and what not to</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">
+      A hobby project's real cost isn't bundle size, it's the day a dependency breaks and you have to
+      relearn its API to fix your own app. Everything below is judged on that.
+    </p>
+
+    <div class="mb-4 overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="border-b border-line bg-paper px-4 py-2 text-xs font-medium text-ink-2">Install</div>
+      <div class="divide-y divide-line">
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">tailwindcss</code><p class="text-xs text-ink-2">v4. No <code class="font-mono">tailwind.config.ts</code> — delete it if the scaffold made one.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">clsx + tailwind-merge</code><p class="text-xs text-ink-2">The <code class="font-mono">cn()</code> helper. Two tiny packages that let a caller override a component's classes without a specificity fight.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">lucide-react</code><p class="text-xs text-ink-2">Tree-shaken, one consistent stroke weight, no icon-font nonsense. Set it at 16px and leave it alone.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">cmdk</code><p class="text-xs text-ink-2">The budget and tag pickers need filter-as-you-type with keyboard nav. This is the one screen where hand-rolling is a genuine mistake — you'd be reimplementing a combobox, and combobox accessibility is deceptively hard.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">@radix-ui/react-popover</code><p class="text-xs text-ink-2">Only to anchor that picker. CSS anchor positioning still isn't safe across browsers, so this earns its place — for now.</p></div>
+      </div>
+    </div>
+
+    <div class="mb-4 overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="border-b border-line bg-paper px-4 py-2 text-xs font-medium text-ink-2">Use the platform instead</div>
+      <div class="divide-y divide-line">
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">&lt;dialog&gt;</code><p class="text-xs text-ink-2">Focus trap, Esc, inert background and a styleable backdrop, all free. Replaces a modal library outright.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">&lt;select&gt;</code><p class="text-xs text-ink-2">For any short fixed list. The phone's native picker beats anything you'd build.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">&lt;input type="date"&gt;</code><p class="text-xs text-ink-2">Instead of a date-picker package, which is usually the largest thing in a finance app's bundle.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">Intl.NumberFormat</code><p class="text-xs text-ink-2">Currency and date formatting. No <code class="font-mono">dayjs</code>, no <code class="font-mono">currency.js</code>.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">CSS transitions</code><p class="text-xs text-ink-2">Two durations, 100ms for hover and press, 160ms for something appearing. No animation library.</p></div>
+      </div>
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-line bg-surface">
+      <div class="border-b border-line bg-paper px-4 py-2 text-xs font-medium text-ink-2">Skip</div>
+      <div class="divide-y divide-line">
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">shadcn/ui</code><p class="text-xs text-ink-2">Tempting, and it would work. But it lands forty files you now own and a colour system you didn't choose — and you already have a palette. Copy the two or three primitives you want if you want them.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">class-variance-authority</code><p class="text-xs text-ink-2">A plain object keyed by variant name does the same job in four lines. See <code class="font-mono">ui.tsx</code>.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">react-hook-form + zod</code><p class="text-xs text-ink-2">The forms here are four fields with no cross-field rules. Uncontrolled inputs and <code class="font-mono">FormData</code> are enough. Revisit if a form ever grows past ten fields.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">a charting library</code><p class="text-xs text-ink-2">The widget's spend line is already hand-drawn SVG and reads better than a chart library's default. Keep drawing paths.</p></div>
+        <div class="flex gap-4 px-4 py-3"><code class="w-40 shrink-0 font-mono text-xs">a state manager</code><p class="text-xs text-ink-2">Server components plus <code class="font-mono">useState</code> covers this. If refetch-after-mutate gets tedious, add SWR — but not before it does.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── rules ──────────────────────────────────────────────────── -->
+  <section class="border-t border-line pt-10">
+    <h2 class="mb-1 text-lg font-semibold">Rules worth keeping</h2>
+    <p class="mb-6 max-w-[62ch] text-sm text-ink-2">The short list that stops this drifting. Everything else is negotiable.</p>
+    <ol class="divide-y divide-line overflow-hidden rounded-lg border border-line bg-surface text-sm">
+      <li class="px-4 py-3">Gold never fills a button. It is focus, low confidence, and past pace — three states that all mean <em>look here</em>.</li>
+      <li class="px-4 py-3">Colour never carries meaning alone. Every state has a word, an icon, or a position saying the same thing.</li>
+      <li class="px-4 py-3">One primary button per screen. If two things look equally committing, neither is.</li>
+      <li class="px-4 py-3">A surface gets a border or a shadow, not both.</li>
+      <li class="px-4 py-3">Provenance shows in the detail view, never in the row. Whether a value came from the bank, from Claude, or from you is a question you ask once, deliberately.</li>
+      <li class="px-4 py-3">Nothing animates that the person didn't cause.</li>
+      <li class="px-4 py-3">Type sizes come from the scale; spacing comes from the six steps. Arbitrary values in a class name are a signal the system is missing something — add it to the theme instead.</li>
+    </ol>
+  </section>
+
+</div>
+</body></html>

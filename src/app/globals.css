@@ -1,1 +1,175 @@
+/* budgeet-web — app/globals.css
+ * Tailwind v4, CSS-first. There is no tailwind.config.ts and there shouldn't be.
+ * Everything below is a token or a genuine global. Components live in TSX. */
+
 @import "tailwindcss";
+
+@theme {
+  /* Wipe Tailwind's default palette. `bg-blue-500` should not compile — if a
+     colour isn't in this file it isn't in the product. Costs five lines to
+     put back the four keywords that aren't really colours. */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* ── surfaces ─────────────────────────────────────────────────────────
+     Paper is the ground, surface is anything that holds a value.
+     Pending is the warm tint on an unreviewed row — it must read as
+     "not finished" without reading as "wrong". */
+  --color-paper: #f6f6f3;
+  --color-surface: #ffffff;
+  --color-pending: #faf8f0;
+  --color-hover: #f0efeb;
+
+  /* ── ink ──────────────────────────────────────────────────────────────
+     Four steps, and four is enough. ink → values you act on.
+     ink-2 → labels. ink-3 → metadata. ink-4 → ghost affordances only. */
+  --color-ink: #17171a;
+  --color-ink-press: #33333a;
+  --color-ink-2: #6c6c74;
+  --color-ink-3: #9c9ca4;
+  --color-ink-4: #c3c3bd;
+
+  --color-line: #e7e6e1;
+  --color-line-strong: #d5d4cd;
+
+  /* ── accent ───────────────────────────────────────────────────────────
+     Gold is a stroke, a tint or a word — never a button fill. It marks
+     focus, pace, and "past pace but still inside budget". Keeping it off
+     fills is what stops it turning into decoration. */
+  --color-gold: #b0801f;
+  --color-gold-ink: #8a6314;
+  --color-gold-soft: #fbf3e2;
+
+  /* Money direction and budget state share one pair. Green is inflow and
+     under-pace; red is outflow past budget and destructive actions. */
+  --color-green: #0f7a4c;
+  --color-green-soft: #e7f2ec;
+  --color-red: #c0432f;
+  --color-red-ink: #9c3626;
+  --color-red-soft: #fbede9;
+
+  /* ── budget hues ──────────────────────────────────────────────────────
+     budgets.color stores one of these names, not a hex. Soft tinted fill
+     plus its own ink, so a pill never competes with an amount. */
+  --color-sage: #e8efe7;
+  --color-sage-ink: #3f6b45;
+  --color-teal: #e2efef;
+  --color-teal-ink: #2c6a69;
+  --color-sky: #e4ebf5;
+  --color-sky-ink: #3a5b87;
+  --color-iris: #eae7f3;
+  --color-iris-ink: #5a4e8c;
+  --color-plum: #f3e7ee;
+  --color-plum-ink: #85436b;
+  --color-rose: #f7e8e7;
+  --color-rose-ink: #a0483f;
+  --color-amber: #f7eddc;
+  --color-amber-ink: #8a6314;
+  --color-olive: #eeefdf;
+  --color-olive-ink: #5e6a2c;
+  --color-stone: #ecece8;
+  --color-stone-ink: #5a5a62;
+
+  /* ── type ─────────────────────────────────────────────────────────────
+     One family. Roles come from size, weight and ink — not from a second
+     face. Mono is scoped to machine strings only: the raw bank
+     description, transaction ids, account masks. */
+  --font-sans:
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-2xs: 0.6875rem; /* 11 — timestamps, column heads, counts */
+  --text-2xs--line-height: 1rem;
+  --text-xs: 0.75rem; /* 12 — category leaf, tags, hints, labels */
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.8125rem; /* 13 — table body, secondary text */
+  --text-sm--line-height: 1.125rem;
+  --text-base: 0.875rem; /* 14 — body, inputs, buttons */
+  --text-base--line-height: 1.25rem;
+  --text-lg: 1rem; /* 16 — modal title, section head */
+  --text-lg--line-height: 1.375rem;
+  --text-xl: 1.25rem; /* 20 — page title */
+  --text-xl--line-height: 1.625rem;
+  --text-xl--letter-spacing: -0.015em;
+  --text-2xl: 1.75rem; /* 28 — a month total, a budget remaining */
+  --text-2xl--line-height: 2rem;
+  --text-2xl--letter-spacing: -0.022em;
+  --text-3xl: 2.5rem; /* 40 — the one hero figure per screen */
+  --text-3xl--line-height: 2.5rem;
+  --text-3xl--letter-spacing: -0.032em;
+
+  /* ── radius ───────────────────────────────────────────────────────────
+     Radius encodes size, not brand. Small controls get small radii. */
+  --radius-xs: 4px; /* inline edit fields, checkboxes */
+  --radius-sm: 6px; /* menu items, small buttons */
+  --radius-md: 8px; /* inputs, buttons, nav items */
+  --radius-lg: 12px; /* menus, popovers, cards */
+  --radius-xl: 16px; /* dialogs, sheets */
+
+  /* ── elevation ────────────────────────────────────────────────────────
+     Two shadows. Anything that isn't floating uses a border instead. */
+  --shadow-pop:
+    0 6px 20px -4px rgb(20 20 25 / 0.14), 0 0 0 1px rgb(0 0 0 / 0.06);
+  --shadow-modal:
+    0 24px 60px -12px rgb(20 20 25 / 0.28), 0 0 0 1px rgb(0 0 0 / 0.06);
+
+  /* ── motion ───────────────────────────────────────────────────────────
+     Two durations. Fast is a hover or a press; base is something
+     appearing. Nothing animates that the person didn't cause. */
+  --ease-out-soft: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+    /* Every number in this app sits in a column under another number. */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* One focus ring, gold, everywhere. Never remove it. */
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 1px;
+    border-radius: var(--radius-xs);
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-gold) 22%, transparent);
+  }
+
+  /* Native dialog carries focus trapping, Esc and inert background for
+     free, so the transaction modal is a <dialog>. This is its backdrop. */
+  dialog::backdrop {
+    background-color: rgb(23 23 26 / 0.32);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Amounts. Slightly tighter than body text so a column of them reads as a
+   column. Used on every figure in the app. */
+@utility money {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
