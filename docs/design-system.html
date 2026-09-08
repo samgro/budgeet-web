@@ -49,6 +49,8 @@
   :focus-visible{outline:2px solid var(--color-gold);outline-offset:1px;border-radius:4px}
   ::selection{background-color:color-mix(in oklab,var(--color-gold) 22%,transparent)}
   dialog::backdrop{background-color:rgb(23 23 26 / .32)}
+  /* biome-ignore lint/complexity/noImportantStyles: must beat any component's own
+     transition-duration regardless of specificity, or prefers-reduced-motion does nothing */
   @media (prefers-reduced-motion:reduce){*,*::before,*::after{transition-duration:.01ms!important}}
 }
 @utility money{font-variant-numeric:tabular-nums;letter-spacing:-0.01em}
@@ -98,7 +100,7 @@
         <span class="min-w-0 flex-1 truncate text-sm">Blue Bottle Coffee</span>
         <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-amber pl-2 pr-2.5 text-xs font-medium text-amber-ink">☕ Coffee</span>
         <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">coffee</span>
-        <span class="hidden w-24 shrink-0 sm:block"><button class="inline-flex h-5 items-center rounded-full border border-dashed border-ink-4 px-2 text-2xs text-ink-4 opacity-0 transition-opacity hover:border-ink-3 hover:text-ink-2 group-hover:opacity-100">+ tag</button></span>
+        <span class="hidden w-24 shrink-0 sm:block"><button type="button" class="inline-flex h-5 items-center rounded-full border border-dashed border-ink-4 px-2 text-2xs text-ink-4 opacity-0 transition-opacity hover:border-ink-3 hover:text-ink-2 group-hover:opacity-100">+ tag</button></span>
         <span class="money w-20 shrink-0 text-right text-sm font-medium">$6.75</span>
       </div>
 
@@ -108,7 +110,7 @@
         <span class="min-w-0 flex-1 truncate text-sm">SQ *THE UNION</span>
         <span class="inline-flex h-6 items-center gap-1.5 rounded-full bg-rose pl-2 pr-2.5 text-xs font-medium text-rose-ink">🍽 Dining</span>
         <span class="hidden w-28 shrink-0 text-xs text-ink-3 sm:block">restaurant</span>
-        <span class="hidden w-24 shrink-0 sm:block"><button class="inline-flex h-5 items-center rounded-full border border-line bg-paper px-2 text-2xs text-ink-2">brunch</button></span>
+        <span class="hidden w-24 shrink-0 sm:block"><button type="button" class="inline-flex h-5 items-center rounded-full border border-line bg-paper px-2 text-2xs text-ink-2">brunch</button></span>
         <span class="money w-20 shrink-0 text-right text-sm font-medium">$64.20</span>
       </div>
 
@@ -134,7 +136,7 @@
 
       <div class="flex items-center justify-between bg-pending px-4 py-2">
         <span class="text-2xs text-ink-3">2 waiting on you</span>
-        <button class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:bg-hover">Mark 2 reviewed</button>
+        <button type="button" class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:bg-hover">Mark 2 reviewed</button>
       </div>
     </div>
   </section>
@@ -321,17 +323,17 @@
 
     <div class="overflow-hidden rounded-lg border border-line bg-surface">
       <div class="flex flex-wrap items-center gap-3 border-b border-line p-5">
-        <button class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
-        <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:border-line-strong hover:bg-hover">Cancel</button>
-        <button class="btn h-9 rounded-md px-3.5 text-base text-ink-2 hover:bg-hover hover:text-ink">Clear override</button>
-        <button class="btn h-9 rounded-md bg-red px-3.5 text-base text-white hover:bg-red-ink">Delete budget</button>
-        <button disabled class="btn h-9 cursor-not-allowed rounded-md bg-ink px-3.5 text-base text-white opacity-40">Save changes</button>
+        <button type="button" class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
+        <button type="button" class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:border-line-strong hover:bg-hover">Cancel</button>
+        <button type="button" class="btn h-9 rounded-md px-3.5 text-base text-ink-2 hover:bg-hover hover:text-ink">Clear override</button>
+        <button type="button" class="btn h-9 rounded-md bg-red px-3.5 text-base text-white hover:bg-red-ink">Delete budget</button>
+        <button type="button" disabled class="btn h-9 cursor-not-allowed rounded-md bg-ink px-3.5 text-base text-white opacity-40">Save changes</button>
       </div>
       <div class="flex flex-wrap items-center gap-3 border-b border-line p-5">
-        <button class="btn h-7 rounded-sm bg-ink px-2.5 text-sm text-white hover:bg-ink-press">Sync now</button>
-        <button class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:border-line-strong hover:bg-hover">Mark 2 reviewed</button>
-        <button class="btn h-7 rounded-sm px-2.5 text-sm text-ink-2 hover:bg-hover hover:text-ink">Show hidden</button>
-        <button class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="More">···</button>
+        <button type="button" class="btn h-7 rounded-sm bg-ink px-2.5 text-sm text-white hover:bg-ink-press">Sync now</button>
+        <button type="button" class="btn h-7 rounded-sm border border-line bg-surface px-2.5 text-sm hover:border-line-strong hover:bg-hover">Mark 2 reviewed</button>
+        <button type="button" class="btn h-7 rounded-sm px-2.5 text-sm text-ink-2 hover:bg-hover hover:text-ink">Show hidden</button>
+        <button type="button" class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="More">···</button>
       </div>
       <div class="grid gap-x-6 gap-y-2 p-5 text-xs text-ink-2 sm:grid-cols-2">
         <p><b class="font-medium text-ink">primary</b> — the one committing action on a screen. Never two.</p>
@@ -412,11 +414,11 @@
         <div class="w-56 rounded-lg border border-line bg-surface p-1 shadow-pop">
           <p class="px-2 py-1.5 text-2xs text-ink-3">Assign budget</p>
           <div class="mx-1 mb-1 flex h-8 items-center rounded-sm border border-line px-2 text-sm text-ink-3">Search…</div>
-          <button class="flex h-8 w-full items-center gap-2 rounded-sm bg-hover px-2 text-sm"><span class="size-2 rounded-full bg-amber-ink"></span>Coffee</button>
-          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-rose-ink"></span>Dining</button>
-          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-olive-ink"></span>Groceries</button>
+          <button type="button" class="flex h-8 w-full items-center gap-2 rounded-sm bg-hover px-2 text-sm"><span class="size-2 rounded-full bg-amber-ink"></span>Coffee</button>
+          <button type="button" class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-rose-ink"></span>Dining</button>
+          <button type="button" class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm hover:bg-hover"><span class="size-2 rounded-full bg-olive-ink"></span>Groceries</button>
           <div class="my-1 h-px bg-line"></div>
-          <button class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm text-ink-2 hover:bg-hover">Clear budget</button>
+          <button type="button" class="flex h-8 w-full items-center gap-2 rounded-sm px-2 text-sm text-ink-2 hover:bg-hover">Clear budget</button>
         </div>
         <p class="mt-3 max-w-[40ch] text-xs text-ink-2">Menu items are 32px with a 6px radius and inset by 4px, so the highlight never touches the menu's edge.</p>
       </div>
@@ -425,7 +427,7 @@
         <div class="overflow-hidden rounded-xl border border-line bg-surface shadow-modal">
           <div class="flex items-center justify-between border-b border-line px-5 py-3.5">
             <h3 class="text-lg font-semibold">Blue Bottle Coffee</h3>
-            <button class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="Close">✕</button>
+            <button type="button" class="btn size-8 rounded-md text-ink-2 hover:bg-hover hover:text-ink" aria-label="Close">✕</button>
           </div>
           <div class="space-y-4 px-5 py-4">
             <div class="flex items-baseline justify-between"><span class="text-xs text-ink-2">Amount</span><span class="money text-2xl font-semibold">$6.75</span></div>
@@ -435,8 +437,8 @@
             </div>
           </div>
           <div class="flex justify-end gap-2 border-t border-line bg-paper px-5 py-3">
-            <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Cancel</button>
-            <button class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
+            <button type="button" class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Cancel</button>
+            <button type="button" class="btn h-9 rounded-md bg-ink px-3.5 text-base text-white hover:bg-ink-press">Save changes</button>
           </div>
         </div>
         <p class="mt-3 max-w-[40ch] text-xs text-ink-2">Header, body, footer — the footer sits on paper so the actions read as a separate surface. On phones this becomes a bottom sheet.</p>
@@ -455,12 +457,12 @@
       <div class="rounded-lg border border-line bg-surface px-5 py-8 text-center">
         <p class="mb-1 text-base font-medium">No transactions this month yet</p>
         <p class="mx-auto mb-4 max-w-[36ch] text-sm text-ink-2">Tiller posts a day or two behind the bank, so the start of a month is usually quiet.</p>
-        <button class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Sync now</button>
+        <button type="button" class="btn h-9 rounded-md border border-line bg-surface px-3.5 text-base hover:bg-hover">Sync now</button>
       </div>
       <div class="rounded-lg border border-red bg-red-soft px-5 py-4">
         <p class="mb-1 text-base font-medium text-red-ink">Sync failed after 11 accounts</p>
         <p class="mb-3 max-w-[44ch] text-sm text-ink-2">The Google Sheets quota was reached. Transactions already read are saved; the rest will come through on the next run.</p>
-        <button class="btn h-7 rounded-sm border border-red-ink/25 bg-surface px-2.5 text-sm text-red-ink hover:bg-red-soft">Try again</button>
+        <button type="button" class="btn h-7 rounded-sm border border-red-ink/25 bg-surface px-2.5 text-sm text-red-ink hover:bg-red-soft">Try again</button>
       </div>
     </div>
   </section>
