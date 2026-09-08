@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "biome check --error-on-warnings .",
-    "lint:fix": "biome check --write ."
+    "lint:fix": "biome check --write .",
+    "probe": "bun --conditions=react-server --env-file=.env.local scripts/probe-api.ts"
   },
   "dependencies": {
     "next": "16.3.4",
