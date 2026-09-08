@@ -22,6 +22,9 @@ being down.
 
 `.env.local` is gitignored and stays that way.
 
+Nothing in this app gets a `NEXT_PUBLIC_` prefix — that inlines the value into client JS. Server
+config is read only through `@/lib/env`, which is `server-only`.
+
 ## Conventions
 
 - Biome v2 owns formatting; don't hand-format. No semicolons, double quotes, 100-column lines.
