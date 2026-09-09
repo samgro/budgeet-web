@@ -36,11 +36,20 @@ export interface TransactionBudget {
   emoji: string | null
 }
 
+// Updated 2026-09-09: category was reshaped by budgeet-hono from a flat
+// { detailed, primary, description, iconUrl } into this nested form.
+// description/iconUrl are gone — not just from the response, from the
+// categories table itself. category is all-or-nothing null: an unclassified
+// transaction, or one whose raw category isn't in the taxonomy, has no
+// primary either — see toCategoryDisplay in budgeet-hono's transactions.ts.
+export interface TransactionCategoryEntry {
+  id: string
+  name: string
+}
+
 export interface TransactionCategory {
-  detailed: string
-  primary: string
-  description: string | null
-  iconUrl: string | null
+  primary: TransactionCategoryEntry
+  detailed: TransactionCategoryEntry
 }
 
 export interface TransactionSubscription {

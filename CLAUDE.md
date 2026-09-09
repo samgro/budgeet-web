@@ -32,6 +32,8 @@ config is read only through `@/lib/env`, which is `server-only`.
 - **Amounts are numeric strings and stay strings.** The API sends them as strings; pass them through,
   compare them as strings, render them as strings. Parsing to `Number` introduces float rounding into
   currency, and it never round-trips back cleanly.
+- No single-letter or abbreviated variable names — `response` not `res`, `context` not `c`, `error` not `err`, `request` not `req`. Applies everywhere, including Hono handler params, tests, Drizzle index-callback
+  parameters (`table`, not `t`), and SQL aliases inside `sql` templates.
 
 ## Agent files
 
@@ -42,3 +44,16 @@ appending its block to the bottom of this file when `AGENTS.md` is missing.
 ## Git
 
 Commit directly to `main`. No feature branches, no PRs — same as `budgeet-hono`.
+
+## Manual edits
+
+I edit files by hand while reviewing your work. If a file you've touched has changed on disk since,
+treat that as deliberate, not a mistake to correct — read it and build on the new version. If a change
+looks accidental (a stray reformat, a partial edit, something that contradicts a convention above in a
+way that looks unintentional), don't silently "fix" it back — ask me first. Same bar for reverting or
+overwriting a manual edit outright: confirm before you do it.
+
+## Session protocol
+
+One Linear ticket per session (project `Budgeet`, team prefix `SDG`, should have label `web`). Work the ticket's checklist top to
+bottom. Don't refactor code from an earlier epic — open a new ticket instead of widening the session. After finishing, return a brief description of what was done, a clear instruction for how to manually validate. Ask me if everything looks good to commit, push, and close completed linear tickets.

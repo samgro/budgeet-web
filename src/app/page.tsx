@@ -9,7 +9,7 @@ export default async function Home() {
     <ul>
       {transactions.map((t) => (
         <li key={t.id}>
-          {t.date} — {t.description} — {t.amount} — {t.category?.detailed ?? "—"}
+          {t.date} — {t.description} — {t.amount} — {t.category?.detailed.name ?? "—"}
         </li>
       ))}
     </ul>
